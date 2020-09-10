@@ -35,12 +35,10 @@ func (ws *WebServer) Start() {
 		ws.wsh.Upgrade(w, r)
 	})
 
-	// Websocket Handler
-	//http.HandleFunc("/ws", handler)
-
 	// WebPage Route
 	http.HandleFunc("/", web)
-	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("js"))))
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("internal/net/css"))))
+	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("internal/net/js"))))
 
 	// WebServer
 	srv := &http.Server{
