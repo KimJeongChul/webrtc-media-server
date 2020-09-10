@@ -11,12 +11,33 @@
   </div>
   <div class="page">
     <p class="subtitle">Media Room</p>
-    <div style="text-align: left;">
+    <div>
       <button id='createResource' class="button" onclick='createResource();'>Create</button>
       <button id='destroyResource' class="button" onclick='destroyResource();'>Delete</button>
     </div>
     <hr>
-     
+
+    <p class="subtitle">Client</p>
+    <div class="forms">
+      <div class="form-group">
+        <p>Media room ID</p>
+        <input class="input-media-room-id" id="media_room_id" type="text">
+      </div>
+      <div class="form-group">
+        <p>User ID</p>
+        <input class="input-user-id" id="user_id" type="text">
+      </div>
+      <div class="form-group">
+        <p>Handle ID</p>
+        <input class="input-handle-id" id="user_id" type="text">
+      </div>
+    </div>
+    <hr>
+
+    <div style="width:100%">
+      <button id='call' class="button" onclick='createResource();'>Call</button>
+    </div>
+
   </div>
 </body>
 </html>
