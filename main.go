@@ -8,6 +8,7 @@ import (
 
 	"github.com/KimJeongChul/webrtc-media-server/internal/net"
 	"github.com/KimJeongChul/webrtc-media-server/internal/room"
+	"github.com/KimJeongChul/webrtc-media-server/internal/websocket"
 )
 
 func main() {
@@ -25,9 +26,12 @@ func main() {
 	}
 
 	// RoomManager
-	rm := room.NewRoomManager()
+	roomManager := room.NewRoomManager()
+
+	// WebSocket Handler
+	webSocketHandler := websocket.New(roomManager)
 
 	// WebServer
-	ws := net.NewWebServer(*mediaServerPort, rm)
+	ws := net.NewWebServer(*mediaServerPort, webSocketHandler)
 	ws.Start()
 }
