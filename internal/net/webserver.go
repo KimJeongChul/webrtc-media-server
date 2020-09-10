@@ -36,15 +36,16 @@ func (ws *WebServer) Start() {
 	})
 
 	// WebPage Route
-	http.HandleFunc("/", web)
-	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("internal/net/css"))))
-	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("internal/net/js"))))
+	router.Get("/", web)
+	router.Handle("/js/*", http.StripPrefix("/js/", http.FileServer(http.Dir("internal/net/js"))))
+	router.Handle("/css/*", http.StripPrefix("/css/", http.FileServer(http.Dir("internal/net/css"))))
 
 	// WebServer
 	srv := &http.Server{
 		Addr:         ":" + ws.port,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
+		Handler:      router,
 	}
 
 	// WebServer Listen and Serve
