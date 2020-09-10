@@ -5,19 +5,20 @@ import (
 	"time"
 
 	"github.com/KimJeongChul/webrtc-media-server/internal/types"
+	"github.com/go-chi/chi"
 )
 
 // WebServer
 type WebServer struct {
 	port string
-	rm   types.RoomManager
+	wsh  types.WebSocketHandler
 }
 
 // NewWebServer
-func NewWebServer(port string, rm types.RoomManager) *WebServer {
+func NewWebServer(port string, wsh types.WebSocketHandler) *WebServer {
 	ws := &WebServer{
 		port: port,
-		rm:   rm,
+		wsh:  wsh,
 	}
 	return ws
 }
@@ -27,8 +28,15 @@ func (ws *WebServer) Start() {
 
 	//configureRLimit()
 
+	// Router
+	router := chi.NewRouter()
+
+	router.Get("/ws", func(w http.ResponseWriter, r *http.Request) {
+		ws.wsh.Upgrade(w, r)
+	})
+
 	// Websocket Handler
-	http.HandleFunc("/ws", handler)
+	//http.HandleFunc("/ws", handler)
 
 	// WebPage Route
 	http.HandleFunc("/", web)
