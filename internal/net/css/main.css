@@ -32,6 +32,50 @@
 .title {
   font-size: 1.5em;
   padding-left: 10px;
-  float: left;
   color: #ddd;
+}
+
+.forms {
+  width: 100%;
+  height: 80px;
+  margin-bottom: 5px;
+  position: relative;
+}
+
+.form-group {
+  margin-bottom: 10px;
+  margin-left: 10px;
+  padding: 5px;
+  float: left;
+  width: 320px;
+}
+
+.form-group p{
+  font-size: 0.8em;
+  color: #ddd;
+  font-weight: bold;
+}
+
+.input-media-room-id {
+  width: 320px;
+  height: 24px;
+  border-radius: 6px;
+  border:1px solid black;
+  background-color:seashell;
+}
+
+.input-user-id {
+  width: 320px;
+  height: 24px;
+  border-radius: 6px;
+  border:1px solid black;
+  background-color:seashell;
+}
+
+.input-handle-id {
+    width: 100px;
+    height: 24px;
+    border-radius: 6px;
+    border:1px solid black;
+    background-color:seashell;
 }
