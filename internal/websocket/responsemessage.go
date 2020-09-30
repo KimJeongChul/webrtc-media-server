@@ -10,6 +10,7 @@ type ResponseMessage struct {
 // createResMsgCreateRoom ...
 func createResMsgCreateRoom(roomID string) ResponseMessage {
 	resMsg := ResponseMessage{
+		Method: "resCreateRoom",
 		RoomID: roomID,
 		Status: 200,
 	}
