@@ -21,6 +21,17 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+.call-button {
+  color:whitesmoke; 
+  background-color:#0e7d18;
+  height: 30px;
+  width: 500px;
+  border-radius: 6px;
+  border:1px solid black;
+  margin: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
 .page {
   padding: 10px;
 }
@@ -44,21 +55,8 @@
   position: relative;
 }
 
-.form-group {
-  margin-bottom: 10px;
-  margin-left: 10px;
-  padding: 5px;
-  float: left;
-  width: 320px;
-}
-
-.form-group p{
-  font-size: 0.8em;
-  color: #ddd;
-  font-weight: bold;
-}
-
 .input-media-room-id {
+  font-size: 0.8em;
   width: 320px;
   height: 24px;
   border-radius: 6px;
@@ -67,6 +65,7 @@
 }
 
 .input-user-id {
+  font-size: 0.8em;
   width: 320px;
   height: 24px;
   border-radius: 6px;
@@ -75,6 +74,7 @@
 }
 
 .input-handle-id {
+    font-size: 0.8em;
     width: 100px;
     height: 24px;
     border-radius: 6px;
