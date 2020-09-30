@@ -1,43 +1,112 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/main.css">
+  <meta charset="utf-8">
+  <title>WebRTC Media Server</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body class="body">
-  <div class="topnav">
-    <p class="title">MediaServer</p>
+  <header>
+    <!-- Header Start -->
+    <div class="header-area header-transparent">
+      <div class="main-header ">
+          <div class="header-bottom  header-sticky">
+              <div class="container-fluid">
+                  <div class="row align-items-center">
+                      <!-- Logo -->
+                      <div class="col-xl-2 col-lg-2">
+                          <div class="logo">
+                            <img src="" width="">
+                          </div>
+                      </div>
+                      <div class="col-xl-10 col-lg-10">
+                          <div class="menu-wrapper d-flex align-items-center justify-content-end">
+                              <!-- Main-menu -->
+                              <div class="main-menu d-none d-lg-block">
+                                  <nav>
+                                      <ul id="navigation">                                                                                          
+                                          <li><a href="#">Home</a></li>
+                                          <li><a href="#">Contact</a></li>
+                                          <!-- Button -->
+                                      </ul>
+                                  </nav>
+                              </div>
+                          </div>
+                      </div> 
+                      <!-- Mobile Menu -->
+                      <div class="col-12">
+                          <div class="mobile_menu d-block d-lg-none"></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </header>
+  <main>
+    <!-- Slider Area Start-->
+    <div class="slider-area slider-bg ">
+      <!-- Single Slider -->
+      <div class="single-slider d-flex align-items-center slider-height3">
+          <div class="container">
+              <div class="row align-items-center justify-content-center">
+                  <div class="col-xl-8 col-lg-9 col-md-12 ">
+                      <div class="hero__caption hero__caption3 text-center">
+                          <h1 data-animation="fadeInLeft" data-delay=".6s ">WebRTC Media Server</h1>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
   </div>
-  <div class="page">
-    <p class="subtitle">Media Room</p>
-    <div>
-      <button id='createResource' class="button" onclick='createResource();'>Create</button>
-      <button id='destroyResource' class="button" onclick='destroyResource();'>Delete</button>
-    </div>
-    <hr>
-
-    <p class="subtitle">Client</p>
-    <div class="forms">
-      <div class="form-group">
-        <p>Media room ID</p>
-        <input class="input-media-room-id" id="media_room_id" type="text">
+  <!-- Slider Area End -->
+  <section class="section-padding40 fix">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-9 col-md-10 ">
+            <!-- Section Tittle -->
+            <div class="section-tittle section-tittle2 text-center mb-90">
+                <h2>Media Room</h2>
+                <button id='createResource' class="button" onclick='createResource();'>Create</button>
+                <button id='destroyResource' class="button" onclick='destroyResource();'>Delete</button>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-md-6">
+              <div class="d-flex mb-50">
+                  <div class="pera">
+                    <h6>Media room ID</h6>
+                    <input class="input-media-room-id" id="media_room_id" type="text">    
+                  </div>
+              </div>
+          </div>
+          <div class="col-lg-6 col-md-6">
+              <div class="d-flex mb-50">
+                  <div class="pera">
+                    <h6>User ID</h6>
+                    <input class="input-user-id" id="user_id" type="text"> 
+                    <h6>Handle ID</h6>
+                    <input class="input-handle-id" id="handle_id" type="text">           
+                  </div>
+              </div>
+          </div>
+        </div>
+        <div class="col-xl-8 col-lg-9 col-md-10 justify-content-center text-center">
+          <button id='button_call' class="call-button" onclick='makeCall();'>call</button>
+        </div>
+        <div class="col-xl-8 col-lg-9 col-md-10 justify-content-center text-center" id="local-div">
+        </div>
       </div>
-      <div class="form-group">
-        <p>User ID</p>
-        <input class="input-user-id" id="user_id" type="text">
-      </div>
-      <div class="form-group">
-        <p>Handle ID</p>
-        <input class="input-handle-id" id="user_id" type="text">
-      </div>
     </div>
-    <hr>
-
-    <div style="width:100%">
-      <button id='call' class="button" onclick='createResource();'>Call</button>
-    </div>
-
-  </div>
+  </section>
+  <script src="/js/utils.js"></script>
+  <script src="/js/webrtc.js"></script>  
+  <script src="/js/main.js"></script> 
+</main>
 </body>
 </html>
