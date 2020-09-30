@@ -37,6 +37,11 @@ function createHandle() {
 
 //makeCall Make a Call
 function makeCall() {
+    if(!checkMediaRoomID()){
+        alert("Please check media room id");
+        return
+    }
+
     createHandle();
 
     addRTCSession();
@@ -56,6 +61,16 @@ function createRoom() {
         method: 'createRoom'
     };
     sendMsg(msgCreateRoom);
+}
+
+//checkMediaRoomID 
+function checkMediaRoomID() {
+    let inputMediaRoomID = document.getElementById('media_room_id');
+    console.log(inputMediaRoomID.value);
+    if(inputMediaRoomID.value === "") {
+        return false;
+    }
+    return true;
 }
 
 //sendMsg Send message websocket
