@@ -1,6 +1,7 @@
 package room
 
 import (
+	"errors"
 	"log"
 	"sync"
 
@@ -41,4 +42,14 @@ func (rm *RoomManager) Register() string {
 // Unregister Unregister new room
 func (rm *RoomManager) Unregister(roomID string) {
 	utils.EraseKeyInSyncMap(roomID, rm.rooms)
+}
+
+// Load Load room by room ID.
+func (rm *RoomManager) Load(roomID string) (*Room, error) {
+	if r, ok := rm.rooms.Load(roomID); ok {
+		room := r.(*Room)
+		return room, nil
+	} else {
+		return nil, errors.New("[error] the room doesn't exist")
+	}
 }
