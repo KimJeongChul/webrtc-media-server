@@ -10,19 +10,21 @@ import (
 
 // WebSocketHandler ...
 type WebSocketHandler struct {
-	upgrader    websocket.Upgrader
-	roomManager types.RoomManager
+	upgrader      websocket.Upgrader
+	roomManager   types.RoomManager
+	webrtcManager types.WebRTCManager
 }
 
 // New Create WebSocketHandler
-func New(rm types.RoomManager) *WebSocketHandler {
+func New(rm types.RoomManager, wm types.WebRTCManager) *WebSocketHandler {
 	return &WebSocketHandler{
 		upgrader: websocket.Upgrader{
 			CheckOrigin: func(r *http.Request) bool {
 				return true
 			},
 		},
-		roomManager: rm,
+		roomManager:   rm,
+		webrtcManager: wm,
 	}
 }
 
@@ -54,6 +56,7 @@ func (wsh *WebSocketHandler) handle(conn *websocket.Conn) {
 			log.Printf("[WEBSOCKET] error: %v", err)
 			break
 		}
+		ws.msg <- reqMsg
 	}
 }
 
@@ -64,20 +67,47 @@ func (wsh *WebSocketHandler) handleMessage(ws *WebSocket) {
 		log.Println("[WebSocket] ws request message : ", msg)
 
 		switch {
-		// Create room
+		//Create room
 		case msg.Method == "createRoom":
 			roomID := wsh.roomManager.Register()
 
 			resMsgCreateRoom := createResMsgCreateRoom(roomID)
 			ws.send(resMsgCreateRoom)
 
-		// Release room
+		//Release room
 		case msg.Method == "releaseRoom":
 			roomID := msg.RoomID
 			wsh.roomManager.Unregister(roomID)
 
 			resMsgReleaseRoom := createResMsgReleaseRoom()
 			ws.send(resMsgReleaseRoom)
+
+		//Add RTC session
+		case msg.Method == "addRTCSession":
+			roomID := msg.RoomID
+			userID := msg.UserID
+			handleID := msg.HandleID
+
+			pc, err := wsh.webrtcManager.NewPeerConnection()
+			if err != nil {
+				continue
+			}
+
+			// TODO Create Channel
+
+			room, err := wsh.roomManager.Load(roomID)
+			if err != nil {
+				log.Println("[ERROR] roomID:", roomID, err)
+				continue
+			}
+
+			if false {
+				log.Println(userID, handleID, pc, room)
+			}
+
+		//Set candidate
+		case msg.Method == "candidate":
+			// TODO Set Candidate
 		}
 	}
 }
