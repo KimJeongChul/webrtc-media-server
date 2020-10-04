@@ -8,5 +8,6 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/lestrrat-go/file-rotatelogs v2.3.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.3 // indirect
+	github.com/pion/webrtc/v2 v2.2.26
 	github.com/pkg/errors v0.9.1 // indirect
 )
