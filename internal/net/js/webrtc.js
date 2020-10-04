@@ -56,7 +56,7 @@ function gotStream(stream) {
         }
     }
 
-    // Event handler which specifies a function to be called when the iceconnectionstatechange event is fired on an RTCPeerConnection instance.
+    //Event handler which specifies a function to be called when the iceconnectionstatechange event is fired on an RTCPeerConnection instance.
     pc.oniceconnectionstatechange = (event) => {
         console.log("[Publisher] Connection State : " + pc.iceConnectionState)
     }
