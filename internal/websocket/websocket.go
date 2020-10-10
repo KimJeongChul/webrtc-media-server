@@ -24,7 +24,7 @@ func NewWebSocket(conn *websocket.Conn, msg chan RequestMessage) *WebSocket {
 }
 
 // Send
-func (w *WebSocket) send(v interface{}) error {
+func (w *WebSocket) Send(v interface{}) error {
 	w.mu.Lock()
 	defer w.mu.Unlock()
 	return w.conn.WriteJSON(v)
