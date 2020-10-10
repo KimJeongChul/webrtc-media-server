@@ -72,7 +72,7 @@ func (wsh *WebSocketHandler) handleMessage(ws *WebSocket) {
 			roomID := wsh.roomManager.Register()
 
 			resMsgCreateRoom := createResMsgCreateRoom(roomID)
-			ws.send(resMsgCreateRoom)
+			ws.Send(resMsgCreateRoom)
 
 		//Release room
 		case msg.Method == "releaseRoom":
@@ -80,20 +80,30 @@ func (wsh *WebSocketHandler) handleMessage(ws *WebSocket) {
 			wsh.roomManager.Unregister(roomID)
 
 			resMsgReleaseRoom := createResMsgReleaseRoom()
-			ws.send(resMsgReleaseRoom)
+			ws.Send(resMsgReleaseRoom)
 
 		//Add RTC session
 		case msg.Method == "addRTCSession":
 			roomID := msg.RoomID
 			userID := msg.UserID
 			handleID := msg.HandleID
+			mediaDirection := msg.MediaDir
+			sdp := msg.Sdp
 
 			pc, err := wsh.webrtcManager.NewPeerConnection()
 			if err != nil {
 				continue
 			}
 
-			// TODO Create Channel
+			channel := wsh.webrtcManager.CreateChannel(roomID, userID, handleID, mediaDirection, ws, pc)
+			log.Println(channel)
+
+			switch {
+			case mediaDirection == "recvonly":
+				wsh.webrtcManager.AddPublisherRTCSession(channel, sdp.Sdp)
+			case mediaDirection == "sendonly":
+				// TODO create sub channel
+			}
 
 			room, err := wsh.roomManager.Load(roomID)
 			if err != nil {
