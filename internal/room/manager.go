@@ -10,6 +10,18 @@ import (
 	"github.com/google/uuid"
 )
 
+/**
+ * [RoomManager]
+ *   - [Room 1]
+ *     - <UserID A>
+ *       - [HandleID] (Publisher A) - PeerConnection
+ *       - [HandleID] (Subscriber B)
+ *     - <UserID B>
+ *       - [HandleID] (Publisher B)
+ *       - [HandleID] (Subscriber A)
+ *   - [Room 2]
+ */
+
 // RoomManager Manage to room session
 type RoomManager struct {
 	rooms *sync.Map
@@ -46,9 +58,9 @@ func (rm *RoomManager) Unregister(roomID string) {
 }
 
 // Load Load room by room ID.
-func (rm *RoomManager) Load(roomID string) (*types.Room, error) {
+func (rm *RoomManager) Load(roomID string) (types.Room, error) {
 	if r, ok := rm.rooms.Load(roomID); ok {
-		room := r.(*types.Room)
+		room := r.(types.Room)
 		return room, nil
 	} else {
 		return nil, errors.New("[error] the room doesn't exist")
