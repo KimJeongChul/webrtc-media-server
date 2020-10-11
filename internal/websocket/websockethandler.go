@@ -111,13 +111,21 @@ func (wsh *WebSocketHandler) handleMessage(ws *WebSocket) {
 				continue
 			}
 
-			if false {
-				log.Println(userID, handleID, pc, room)
+			isExistUser := room.Exist(userID)
+			if !isExistUser {
+				room.Register(userID)
+				room.RegisterHandle(userID, handleID, channel)
+			} else {
+				room.RegisterHandle(userID, handleID, channel)
 			}
 
 		//Set candidate
 		case msg.Method == "candidate":
 			// TODO Set Candidate
+
+		//Request Subscribe
+		case msg.Method == "requestSubscribe":
+			// TODO Request Subscribe
 		}
 	}
 }
