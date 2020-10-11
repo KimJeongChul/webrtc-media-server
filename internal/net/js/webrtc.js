@@ -99,15 +99,53 @@ function gotStream(stream) {
             sdp: pc.localDescription
         }
         sendMsg(msgAddRTCSession);
+
+        queueCandidate[user_id] = [];
+
     }).catch((err) => {
         console.log(err.stack);
     });
 }
 
+// Set SDP
+function setSDP(msg) {
+    const req_user_id = msg.userID;
+    const req_handle_id = msg.handleID;
+
+    if(user_id === req_user_id && handle_id === req_handle_id) {
+        // Publisher channel
+        // Sets the specified session description as the remote peer's current offer or answer.
+        pc.setRemoteDescription(msg.sdp, () => {
+            console.log('Publisher Remote Description 설정 완료');
+            recvSDP[req_user_id] = true;
+
+            // Set ICE candidate
+            queueCandidate[req_user_id].forEach((candidate) => {
+                console.log('add queued ice candidate:' + JSON.stringify(candidate));
+                pc.addIceCandidate(new RTCIceCandidate(candidate)).catch((e) => {
+                    console.log('add Queued ICE Exception:' + e);
+                });
+            });
+        });
+    } else {
+        // Subscriber channel
+        if (pcSub[req_user_id] !== undefined) {
+            pcSub[req_user_id].setRemoteDescription(msg.sdp, () => {
+                recvSDP[req_user_id] = true;
+                queueCandidate[req_user_id].forEach((candidate) => {
+                    pcSub[req_user_id].addIceCandidate(new RTCIceCandidate(candidate)).catch((e) => {
+                        console.log('add Queued ICE Exception:' + e);
+                    });
+                });
+            });
+        }
+    }
+}
+
 // Set ICE candidate
 function setCandidate(msg) {
-    const req_user_id = msg.userID
-    const req_handle_id = msg.handleID
+    const req_user_id = msg.userID;
+    const req_handle_id = msg.handleID;
     if (user_id === req_user_id && handle_id === req_handle_id) {
         // Publisher channel
         if (recvSDP[req_user_id]) {
