@@ -217,9 +217,14 @@ func (wm *WebRTCManager) AddPublisherRTCSession(pubChannel types.Channel, sdp st
 		webrtc.SessionDescription{
 			SDP:  string(sdp),
 			Type: webrtc.SDPTypeOffer})
+	if err != nil {
+		log.Println("[ERROR] WebRTC PeerConnection SetRemoteDescription error:", err)
 
+	}
 	answer, err := pubPC.CreateAnswer(nil)
-	log.Println("[ERROR] peerconnection CreateAnswer error:", err)
+	if err != nil {
+		log.Println("[ERROR] WebRTC PeerConnection CreateAnswer error:", err)
+	}
 
 	pubPC.OnICECandidate(func(ice *webrtc.ICECandidate) {
 		if ice != nil {
