@@ -67,6 +67,16 @@ function gotStream(stream) {
     //Event handler which specifies a function to be called when the iceconnectionstatechange event is fired on an RTCPeerConnection instance.
     pc.oniceconnectionstatechange = (event) => {
         console.log("[Publisher] Connection State : " + pc.iceConnectionState)
+        if (pc.iceConnectionState === "connected") {
+            // Request subscribe
+            const msgRequestSubscribe = {
+                method: 'requestSubscribe',
+                roomID: media_room_id,
+                userID: user_id,
+                handleID: handle_id,
+            }
+            sendMsg(msgRequestSubscribe);
+        }
     }
     
     videoLocal = document.createElement('video');
@@ -114,7 +124,7 @@ function setSDP(msg) {
         // Publisher channel
         // Sets the specified session description as the remote peer's current offer or answer.
         pc.setRemoteDescription(msg.sdp, () => {
-            console.log('Publisher Remote Description 설정 완료');
+            console.log('Publisher Set Remote Description completed');
             recvSDP[req_user_id] = true;
 
             // Set ICE candidate
