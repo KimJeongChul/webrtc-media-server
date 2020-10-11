@@ -53,8 +53,6 @@ function gotStream(stream) {
     pc.onicecandidate = function (event) {
         if (event.candidate) {
             //Send Ice
-            console.log(event.candidate);
-
             const msgCandidate = {
                 method: 'candidate',
                 candidate: event.candidate,
@@ -121,10 +119,12 @@ function setSDP(msg) {
 
             // Set ICE candidate
             queueCandidate[req_user_id].forEach((candidate) => {
-                console.log('add queued ice candidate:' + JSON.stringify(candidate));
-                pc.addIceCandidate(new RTCIceCandidate(candidate)).catch((e) => {
-                    console.log('add Queued ICE Exception:' + e);
-                });
+                if (candidate != undefined) {
+                    console.log('add queued ice candidate:' + JSON.stringify(candidate));
+                    pc.addIceCandidate(new RTCIceCandidate(candidate)).catch((e) => {
+                        console.log('add Queued ICE Exception:' + e);
+                    });
+                }
             });
         });
     } else {
