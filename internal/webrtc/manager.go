@@ -125,16 +125,19 @@ func (wm *WebRTCManager) AddPublisherRTCSession(pubChannel types.Channel, sdp st
 			log.Println("[TRACK] connected remote track:", remoteTrack.Kind(), codec)
 
 			videoTrackLock := pubChannel.GetVideoTrackLock()
+
 			videoTrackLock.Lock()
 			videoTrack, err := pubPC.NewTrack(remoteTrack.PayloadType(), remoteTrack.SSRC(), "video", "pion")
-			log.Println("[ERROR] peerconnection NewTrack error:", err)
+			if err != nil {
+				log.Println("[ERROR] WebRTC Peer Connection NewTrack(video) error:", err)
+			}
 			pubChannel.SetVideoTrack(videoTrack)
 			videoTrackLock.Unlock()
 
 			go func() {
 				rtcpPLIInterval := pubChannel.GetRTCPPLIInterval()
 				ticker := time.NewTicker(rtcpPLIInterval)
-				//videoTrack := pubChannel.GetVideoTrack()
+				pubVideoTrack := pubChannel.GetVideoTrack()
 				videoRTCPQuit := pubChannel.GetVideoRTCPQuit()
 				for range ticker.C {
 					select {
@@ -148,7 +151,7 @@ func (wm *WebRTCManager) AddPublisherRTCSession(pubChannel types.Channel, sdp st
 							return
 						}
 						rtcpSendErr := pubPC.WriteRTCP([]rtcp.Packet{&rtcp.PictureLossIndication{
-							MediaSSRC: videoTrack.SSRC(),
+							MediaSSRC: pubVideoTrack.SSRC(),
 						}})
 
 						if rtcpSendErr != nil {
@@ -161,6 +164,8 @@ func (wm *WebRTCManager) AddPublisherRTCSession(pubChannel types.Channel, sdp st
 				}
 			}()
 
+			pubVideoTrack := pubChannel.GetVideoTrack()
+
 			for {
 				if videoTrack == nil {
 					return
@@ -172,17 +177,28 @@ func (wm *WebRTCManager) AddPublisherRTCSession(pubChannel types.Channel, sdp st
 				}
 
 				videoTrackLock.RLock()
-				videoTrack.WriteRTP(videoRtp)
+				pubVideoTrack.WriteRTP(videoRtp)
 				videoTrackLock.RUnlock()
 			}
 
 		} else if remoteTrack.PayloadType() == webrtc.DefaultPayloadTypeOpus {
 			codec := remoteTrack.Codec()
 			log.Println("[TRACK] connected remote track:", remoteTrack.Kind(), codec)
-			audioTrack := pubChannel.GetAudioTrack()
+
 			audioTrackLock := pubChannel.GetAudioTrackLock()
+
+			audioTrackLock.Lock()
+			audioTrack, err := pubPC.NewTrack(remoteTrack.PayloadType(), remoteTrack.SSRC(), "audio", "pion")
+			if err != nil {
+				log.Println("[ERROR] WebRTC Peer Connection NewTrack(video) error:", err)
+			}
+			pubChannel.SetAudioTrack(audioTrack)
+			audioTrackLock.Unlock()
+
+			pubAudioTrack := pubChannel.GetAudioTrack()
+
 			for {
-				if audioTrack == nil {
+				if pubAudioTrack == nil {
 					return
 				}
 
@@ -191,7 +207,7 @@ func (wm *WebRTCManager) AddPublisherRTCSession(pubChannel types.Channel, sdp st
 					continue
 				}
 				audioTrackLock.RLock()
-				audioTrack.WriteRTP(audioRtp)
+				pubAudioTrack.WriteRTP(audioRtp)
 				audioTrackLock.RUnlock()
 			}
 		}
