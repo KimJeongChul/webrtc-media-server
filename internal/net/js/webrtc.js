@@ -21,6 +21,16 @@ let pc_constraints = {
 
 var pc = null;
 
+// Candidate
+let queueCandidate = {};
+
+// SDP
+let recvSDP = {};
+
+// Subscriber
+let videoSub = {};
+let pcSub = {};
+
 //addRTCSession
 function addRTCSession() {
     let button_call = document.getElementById('button_call');
@@ -93,3 +103,31 @@ function gotStream(stream) {
         console.log(err.stack);
     });
 }
+
+// Set ICE candidate
+function setCandidate(msg) {
+    const req_user_id = msg.userID
+    const req_handle_id = msg.handleID
+    if (user_id === req_user_id && handle_id === req_handle_id) {
+        // Publisher channel
+        if (recvSDP[req_user_id]) {
+            // Adds this new remote candidate to the RTCPeerConnection's remote description, which describes the state of the remote end of the connection.
+            pc.addIceCandidate(new RTCIceCandidate(msg.candidate)).catch((e) => {
+                console.log('addIceCandidate Exception:' + e);
+            });
+        } else {
+            queueCandidate[req_user_id].push(msg.candidate);
+        }
+    } else {
+        // Subscriber channel
+        if (pcSub[req_user_id] !== undefined) {
+            if (recvSDP[req_user_id]) {
+                pcSub[req_user_id].addIceCandidate(new RTCIceCandidate(msg.candidate)).catch((e) => {
+                    console.log('addIceCandidate Exception:' + e);
+                });
+            } else {
+                queueCandidate[req_user_id].push(msg.candidate);
+            }
+        }
+    }
+} 
