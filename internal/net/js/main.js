@@ -21,7 +21,16 @@ mediaserver.onmessage = (msg) => {
             media_room_id = parsedMsg.roomID;
         }
             break;
-        
+        case "resCandidate":
+        {
+            setCandidate(parsedMsg);
+        }
+            break;
+        case "resAnswerSDP":
+        {
+            setSDP(parsedMsg);
+        }
+            break;
     }
 }
 
