@@ -62,7 +62,6 @@ func (r *Room) RegisterHandle(userID string, handleID string, channel types.Chan
 	} else if user != nil {
 		handle := NewHandle(channel)
 		user.Store(handleID, handle)
-		log.Println("유저 핸들 저장", handleID, handle)
 	}
 	return nil
 }

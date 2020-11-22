@@ -66,3 +66,7 @@ func (rm *RoomManager) Load(roomID string) (types.Room, error) {
 		return nil, errors.New("[error] the room doesn't exist")
 	}
 }
+
+func (rm *RoomManager) GetRooms() *sync.Map {
+	return rm.rooms
+}
