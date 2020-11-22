@@ -64,8 +64,9 @@ func (wm *WebRTCManager) CreateChannel(roomID string, userID string, handleID st
 		userID:         userID,
 		handleID:       handleID,
 		mediaDirection: mediaDirection,
-		pc:             pc,
-		ws:             ws,
+
+		pc: pc,
+		ws: ws,
 	}
 
 	// Publisher Channel
@@ -95,6 +96,11 @@ func (wm *WebRTCManager) CreateChannel(roomID string, userID string, handleID st
 		channel.iceConnState = state.String()
 		log.Printf("User ID : %s Handle ID : %s ICE connection state : %s\n", channel.GetUserID(), channel.GetHandleID(), channel.iceConnState)
 	})
+
+	channel.iceQueue = make([]webrtc.ICECandidateInit, 0)
+	channel.iceLock = &sync.RWMutex{}
+
+	channel.isSetRemoteSDP = false
 
 	channel.rtcpPLIInterval = time.Second
 
@@ -219,8 +225,10 @@ func (wm *WebRTCManager) AddPublisherRTCSession(pubChannel types.Channel, sdp st
 			Type: webrtc.SDPTypeOffer})
 	if err != nil {
 		log.Println("[ERROR] WebRTC PeerConnection SetRemoteDescription error:", err)
-
 	}
+
+	pubChannel.SetIsSetRemoteSDP(true)
+
 	answer, err := pubPC.CreateAnswer(nil)
 	if err != nil {
 		log.Println("[ERROR] WebRTC PeerConnection CreateAnswer error:", err)

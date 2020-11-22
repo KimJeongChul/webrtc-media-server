@@ -25,6 +25,12 @@ type Channel struct {
 	// ICE connection state
 	iceConnState string
 
+	// ICE Queue
+	iceQueue []webrtc.ICECandidateInit
+	iceLock  *sync.RWMutex
+
+	isSetRemoteSDP bool
+
 	// RTCP
 	rtcpPLIInterval time.Duration
 
@@ -103,4 +109,29 @@ func (ch *Channel) GetVideoRTCPQuit() chan bool {
 // GetWebSocket ...
 func (ch *Channel) GetWebSocket() types.WebSocket {
 	return ch.ws
+}
+
+// GetIceQueue ...
+func (ch *Channel) GetIceQueue() []webrtc.ICECandidateInit {
+	return ch.iceQueue
+}
+
+// SetIceQueue ...
+func (ch *Channel) SetIceQueue(iceQueue []webrtc.ICECandidateInit) {
+	ch.iceQueue = iceQueue
+}
+
+// GetIceLock ...
+func (ch *Channel) GetIceLock() *sync.RWMutex {
+	return ch.iceLock
+}
+
+// SetIsSetRemoteSDP ...
+func (ch *Channel) SetIsSetRemoteSDP(isSetRemoteSDP bool) {
+	ch.isSetRemoteSDP = isSetRemoteSDP
+}
+
+// GetIsSetRemoteSDP ...
+func (ch *Channel) GetIsSetRemoteSDP() bool {
+	return ch.isSetRemoteSDP
 }
