@@ -96,7 +96,6 @@ func (wsh *WebSocketHandler) handleMessage(ws *WebSocket) {
 			}
 
 			channel := wsh.webrtcManager.CreateChannel(roomID, userID, handleID, mediaDirection, ws, pc)
-			log.Println(channel)
 
 			switch {
 			case mediaDirection == "recvonly":
@@ -121,11 +120,53 @@ func (wsh *WebSocketHandler) handleMessage(ws *WebSocket) {
 
 		//Set candidate
 		case msg.Method == "candidate":
-			// TODO Set Candidate
+			// TODO: Set Candidate
+			roomID := msg.RoomID
+			userID := msg.UserID
+			handleID := msg.HandleID
 
+			// Load room using roomID
+			room, err := wsh.roomManager.Load(roomID)
+			if err != nil {
+				log.Println("[ERROR] roomID:", roomID, err)
+				continue
+			}
+
+			// Load handle using userID and handleID
+			handle, err := room.LoadHandle(userID, handleID)
+			if err != nil {
+				continue
+			}
+			channel := handle.GetChannel()
+
+			iceQueue := channel.GetIceQueue()
+			iceLock := channel.GetIceLock()
+			log.Println(iceQueue, iceLock)
+
+			iceLock.Lock()
+			iceQueue = append(iceQueue, msg.Candidate)
+			iceLock.Unlock()
+
+			log.Println("candidate", msg.Candidate.Candidate)
+
+			isSetRemoteSDP := channel.GetIsSetRemoteSDP()
+			if isSetRemoteSDP {
+				for len(iceQueue) > 0 {
+					ice := iceQueue[0]
+					if ice.Candidate != "" {
+						log.Println("AddICECandidate")
+						// Add IceCandidate
+						channel.GetPeerConnection().AddICECandidate(ice)
+					}
+					iceQueue = iceQueue[1:]
+				}
+				iceLock.Lock()
+				channel.SetIceQueue(iceQueue)
+				iceLock.Unlock()
+			}
 		//Request Subscribe
 		case msg.Method == "requestSubscribe":
-			// TODO Request Subscribe
+			// TODO: Request Subscribe
 		}
 	}
 }
