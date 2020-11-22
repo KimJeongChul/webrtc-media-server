@@ -24,4 +24,5 @@ type RoomManager interface {
 	Register() string
 	Unregister(roomID string)
 	Load(roomID string) (Room, error)
+	GetRooms() *sync.Map
 }

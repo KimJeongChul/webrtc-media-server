@@ -22,6 +22,11 @@ type Channel interface {
 	GetRTCPPLIInterval() time.Duration
 	GetVideoRTCPQuit() chan bool
 	GetWebSocket() WebSocket
+	GetIceQueue() []webrtc.ICECandidateInit
+	SetIceQueue(iceQueue []webrtc.ICECandidateInit)
+	GetIceLock() *sync.RWMutex
+	SetIsSetRemoteSDP(isSetRemoteSDP bool)
+	GetIsSetRemoteSDP() bool
 }
 
 // WebRTCManager ...
