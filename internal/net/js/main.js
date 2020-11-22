@@ -79,6 +79,8 @@ function checkMediaRoomID() {
     if(inputMediaRoomID.value === "") {
         return false;
     }
+    media_room_id = inputMediaRoomID.value;
+    console.log("media_room_id :" + media_room_id);
     return true;
 }
 
